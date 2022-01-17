@@ -1,0 +1,55 @@
+- name: Install packages that allow apt to be used over HTTPS
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - gnupg
+    - software-properties-common
+    - net-tools
+    - openssh-server
+    - tzdata
+    - perl
+    - postfix
+
+- name: setando senha para o usuario padrão vagrant
+  user:
+    name: vagrant
+    password: "{{ 'root123' | password_hash('sha512') }}"
+    comment: vagrant
+    shell: /bin/bash
+    update_password: always
+    group: admin
+- name: Configure sshd
+  lineinfile:
+    path: "/etc/ssh/sshd_config"
+    regex: "^(#)?{{item.key}}"
+    line: "{{item.key}} {{item.value}}"
+    state: present
+  loop:
+    - { key: "PermitRootLogin", value: "yes" }
+    - { key: "PasswordAuthentication", value: "yes" }
+- name: "Stop ssh"
+  service:
+    name: ssh
+    state: stopped
+- name: "Start ssh"
+  service:
+    name: ssh
+    state: started
+
+- name: set dns resolved.conf
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#DNS='
+    line: DNS=192.168.0.200
+- name: set domain resolved.conf
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#Domains='
+    line: Domains=colabdevops

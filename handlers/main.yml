@@ -1,0 +1,11 @@
+---
+# handlers file for testevag
+- name: reload firewalld
+  service: name=firewall state=restarted
+
+- name: start jenkins
+  service: name=jenkins state=started
+
+- name: start gitlab
+  command: gitlab-ctl reconfigure
+---

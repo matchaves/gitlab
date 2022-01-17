@@ -1,0 +1,12 @@
+Log created: 2021-10-23T23:39:35.485665000Z
+Process ID:  171673 (0x29e99)
+Parent PID:  1345 (0x541)
+Executable:  /usr/lib/virtualbox/VBoxHeadless
+Arg[0]: /usr/lib/virtualbox/VBoxHeadless
+Arg[1]: --comment
+Arg[2]: gitlab_gitlab_1635024419785_59591
+Arg[3]: --startvm
+Arg[4]: 4de2f244-313e-4b6f-9fc2-b476df73f067
+Arg[5]: --vrde
+Arg[6]: config
+AddRef: illegal refcnt=3221225469 state=2

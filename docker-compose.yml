@@ -1,0 +1,29 @@
+version: "3.6"
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    ports:
+      - "22:22"
+      - "80:80"
+      - "443:443"
+    #volumes:
+    #  - $GITLAB_HOME/data:/var/opt/gitlab
+    #  - $GITLAB_HOME/logs:/var/log/gitlab
+    #  - $GITLAB_HOME/config:/etc/gitlab
+    environment:
+      GITLAB_OMNIBUS_CONFIG: "external_url 'http://git.colab.com/'; gitlab_rails['initial_root_password'] = 'rootroot123';"
+    #secrets:
+    #  - gitlab_root_password
+  gitlab-runner:
+    image: gitlab/gitlab-runner:alpine
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+#configs:
+#  gitlab:
+#    file: ./gitlab.rb
+#secrets:
+#  gitlab_root_password:
+#    file: ./root_password.txt

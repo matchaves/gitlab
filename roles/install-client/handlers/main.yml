@@ -1,0 +1,21 @@
+- name: restart_resolved
+  tags:
+    - service
+  service:
+    name: systemd-resolved
+    state: restarted
+  become: true
+- name: restart_vm
+  reboot:
+  become: true
+
+# handlers file for install-k8s
+- name: Restart Docker
+  service:
+    name: docker
+    state: restarted
+
+- name: Restart Kubelet
+  service:
+    name: kubelet
+    state: restarted

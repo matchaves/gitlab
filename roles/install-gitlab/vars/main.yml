@@ -1,0 +1,7 @@
+---
+# vars file for teste
+#Gitlab-ce#
+path.install.repo.gitlab-ce: /tmp/script.deb.sh
+package.install.repo.gitlab-ce: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh
+url.externa: http://gitlab.colabdevops.com.br
+http_port: 80

@@ -1,0 +1,46 @@
+
+- name: basic packages
+  apt:
+    state: present
+    update_cache: yes
+    name:
+      - libnss-ldap
+      - libpam-ldap
+      - ldap-utils
+- name: "update nsswitch.conf"
+  template:
+    src: templates/nsswitch.conf.j2
+    dest: /etc/nsswitch.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: "update common-password"
+  template:
+    src: templates/common-password.j2
+    dest: /etc/pam.d/common-password
+    owner: root
+    group: root
+    mode: 0644
+- name: "update common-session"
+  template:
+    src: templates/common-session.j2
+    dest: /etc/pam.d/common-session
+    owner: root
+    group: root
+    mode: 0644
+- name: "update ldap.conf"
+  template:
+    src: templates/ldap.conf.j2
+    dest: /etc/ldap.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: "copy ldap secret password"
+  template:
+    src: templates/ldap.secret.j2
+    dest: /etc/ldap.secret
+    owner: root
+    group: root
+    mode: 0644
+  notify: 
+    - restart_resolved

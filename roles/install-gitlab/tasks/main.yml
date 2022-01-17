@@ -1,0 +1,35 @@
+---
+# tasks file for teste
+
+- name: "Exportando a URL do Gitlab"
+  shell:
+    cmd: export EXTERNAL_URL="http://gitlab.colabdevops.com.br"
+
+- name: "Exportando a URL do Gitlab"
+  shell:
+    cmd: export GITLAB_ROOT_PASSWORD="root123"
+
+- name: "Download do repositório RedHat do Gitlab"
+  get_url:
+    url: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh 
+    dest: /tmp/script.deb.sh
+    mode: 0755
+  register: downloadrepo
+
+- name: instalação Repo Gitlab
+  shell: /tmp/script.deb.sh
+  environment:
+    GITLAB_ROOT_PASSWORD: root123
+    EXTERNAL_URL: http://gitlab.colabdevops.com.br
+
+- name: "Instalação do GitLab."
+  apt: 
+    name: gitlab-ee 
+    state: latest
+  environment:
+    GITLAB_ROOT_PASSWORD: root123
+    EXTERNAL_URL: http://gitlab.colabdevops.com.br
+  #notify: start gitlab
+
+...
+      

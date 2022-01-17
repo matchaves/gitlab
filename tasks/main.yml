@@ -1,0 +1,71 @@
+---
+# tasks file for teste
+- hosts: all
+  become: true
+  tasks:
+    - name: "Add the user 'johnd' with a specific uid and a primary group of 'admin'"
+      user:
+        name: note
+        password: "{{ 'root123' | password_hash('sha512') }}"
+        comment: John Do
+        shell: /bin/bash
+        update_password: on_create
+        group: admin
+    - name: "Configure sshd"
+      lineinfile:
+        path: "/etc/ssh/sshd_config"
+        regex: "^(#)?{{item.key}}"
+        line: "{{item.key}} {{item.value}}"
+        state: present
+      loop:
+        - { key: "PermitRootLogin", value: "yes" }
+        - { key: "PasswordAuthentication", value: "yes" }
+    - name: "Stop ssh"
+      service:
+        name: ssh
+        state: stopped
+    - name: "Start ssh"
+      service:
+        name: ssh
+        state: started
+    
+    - name: "Instalação dos pacotes de dependencia entre outros."
+      apt: 
+        name: "{{ item }}" 
+        state: present 
+        update_cache: yes 
+      with_items:
+        - "vim"
+        - "wget"
+        - "git"
+        - "curl"
+        - "postfix"
+        - "ca-certificates"
+        - "tzdata"
+        - "perl"
+        - "openssh-server"
+        #- "epel-release"
+        #- "java"
+        #- "policycoreutils-python" 
+        #- "libselinux-python"
+    - name: "Download do repositório RedHat do Gitlab"
+      get_url:
+        url: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh 
+        dest: /tmp/script.deb.sh
+        mode: 0755
+      register: downloadrepo
+
+    - name: instalação Repo Gitlab
+      shell: /tmp/script.deb.sh
+
+    - name: "Instalação do Gitlab"
+      shell:
+        cmd: EXTERNAL_URL="http://gitlab.colabdevops.com.br" apt-get install -y gitlab-ce
+
+    - name: "Desabilitando o Letsencrypt"
+      shell:
+        cmd: sed -i "s|# letsencrypt\['enable'\] = nil|letsencrypt\['enable'\] = false|" /etc/gitlab/gitlab.rb
+
+...
+
+      

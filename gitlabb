@@ -1,0 +1,43 @@
+## Fix
+## dpkg-reconfigure tzdata
+## hostnamectl set-hostname git.domain.com
+## echo "" >>/etc/hosts
+## echo "git.domain.com" >/etc/hostname
+## echo "192.168.X.10  git.domain.com" >>/etc/hosts
+## echo "git.domain.com" > /proc/sys/kernel/hostname
+
+
+apt-get update
+apt-get install -y ca-certificates curl openssh-server postfix
+apt-get install -y apt-transport-https gnupg2 software-properties-common
+
+## Gitlab
+curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | bash
+EXTERNAL_URL="https://gitlab.colabdevops.com.br" apt-get install -y gitlab-ce
+
+Acessando o console
+cd /home/git/gitlab
+sudo -u git -H bin/rails console -e production
+
+# Ou
+gitlab-rails console -e production
+
+Backups
+## /home/git/gitlab/tmp/backups/
+cd /home/git/gitlab
+sudo -u git -H bundle exec rake gitlab:backup:create RAILS_ENV=production
+su git -c 'bundle exec rake gitlab:backup:create RAILS_ENV=production'
+
+# Ou
+gitlab-rake gitlab:backup:create
+
+
+## sed -i "s|# letsencrypt\['enable'\] = nil|letsencrypt\['enable'\] = false|" /etc/gitlab/gitlab.rb
+
+
+sed -i "s|# nginx\['enable'\] = true|nginx\['enable'\] = true|" /etc/gitlab/gitlab.rb
+
+sed -i "s|# letsencrypt\['enable'\] = nil|letsencrypt\['enable'\] = false|" /etc/gitlab/gitlab.rb
+
+nginx['ssl_certificate'] = "/etc/gitlab/ssl/gitlab.colabdevops.com.br.crt"
+nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/gitlab.colabdevops.com.br.key"
