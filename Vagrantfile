@@ -8,7 +8,7 @@
 Vagrant.configure("2") do |config|
 
   config.vm.box = "ubuntu/focal64"
-  config.vm.hostname = "gitlab.colabdevops.com.br"
+  config.vm.hostname = "gitlab.devops"
   config.vm.define "gitlab"
   
 
@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
   end
 
 
-  config.vm.network "public_network", bridge: "wlp6s0", ip: "192.168.50.220"
+  config.vm.network "public_network", bridge: "wlp8s0", ip: "192.168.50.220"
 
 
   #
